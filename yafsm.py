@@ -4,8 +4,9 @@ version = 0.1
 
 class StateException(Exception):
 
-    def __init__(self, err):
+    def __init__(self, err, context):
         self.error = err
+        self.context = context
 
 class BaseStateMachine(object):
     """有限状态机
@@ -69,9 +70,9 @@ class BaseStateMachine(object):
         if not func:
             # 未能够进入下一状态，应该是出了错。
             if self.error:
-                raise StateException(self.error)
+                raise StateException(self.error, self.context)
             else:
-                raise StateException('unknown state error')
+                raise StateException('unknown state error', self.context)
 
     def should_transit(self, name, condition):
         if condition:
